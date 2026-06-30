@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-
+import { RouterModule } from '@angular/router';
+import { HealthScoreComponent } from './health-score.component';
 
 @NgModule({
-  declarations: [],
   imports: [
-    CommonModule
+    HealthScoreComponent,
+    RouterModule.forChild([{ path: '', component: HealthScoreComponent }])
   ]
 })
-export class HealthScoreModule { }
+export class HealthScoreModule {}

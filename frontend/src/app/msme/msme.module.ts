@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-
+import { RouterModule } from '@angular/router';
+import { MsmeProfileComponent } from './msme-profile.component';
 
 @NgModule({
-  declarations: [],
   imports: [
-    CommonModule
+    MsmeProfileComponent,
+    RouterModule.forChild([{ path: '', component: MsmeProfileComponent }])
   ]
 })
-export class MsmeModule { }
+export class MsmeModule {}
