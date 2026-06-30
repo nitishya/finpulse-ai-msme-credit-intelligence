@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: finpulse-postgres
+    environment:
+      POSTGRES_USER: finpulse_user
+      POSTGRES_PASSWORD: finpulse_password
+      POSTGRES_DB: finpulse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - finpulse-network
+
+  mongodb:
+    image: mongo:6
+    container_name: finpulse-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin_password
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - finpulse-network
+
+  backend:
+    build:
+      context: ./backend
+    container_name: finpulse-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finpulse_db
+      SPRING_DATASOURCE_USERNAME: finpulse_user
+      SPRING_DATASOURCE_PASSWORD: finpulse_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - postgres
+    networks:
+      - finpulse-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: finpulse-frontend
+    ports:
+      - "4200:4200"
+    networks:
+      - finpulse-network
+
+  ai-engine:
+    build:
+      context: ./ai-engine
+    container_name: finpulse-ai-engine
+    ports:
+      - "8000:8000"
+    networks:
+      - finpulse-network
+
+networks:
+  finpulse-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
